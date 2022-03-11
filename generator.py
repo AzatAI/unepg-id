@@ -17,6 +17,10 @@ class Generator:
         self.name = name
         self.name_size = self.name_font.getsize(self.name)
 
+        if self.name_size[0] > 1998:
+            self.template_size = 2600
+            self.name_font = ImageFont.truetype(f"{self.path}/static/fonts/arial_bold.ttf", 33 * 4)
+
         self.code_font = ImageFont.truetype(f"{self.path}/static/fonts/arial_regular.ttf", 16 * 4)
 
         self.label_font = ImageFont.truetype(f"{self.path}/static/fonts/arial_regular.ttf", 24 * 4)
@@ -83,3 +87,4 @@ class Generator:
         card.save(f'cards/{self.pk}.png')
         os.remove(f'cards/{self.transliterate(self.name)}.png')
         card.close()
+

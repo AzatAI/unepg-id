@@ -16,4 +16,3 @@ for i in range(worksheet.nrows):
 for row in data:
     generator = Generator(name=row[0], pk=int(row[1]))
     generator.generate_images()
-
