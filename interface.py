@@ -1,14 +1,16 @@
 import datetime
+import os
 from tkinter import *
 from tkinter import filedialog, messagebox, Toplevel
 from reader import open_xlsx
 from reader import Generator
-import os
 import threading
+from pathlib import Path
 
 
 class UnisatIDInterface:
     def __init__(self):
+        self.path = Path.cwd()
         self.window = Tk()
         self.window.title("Unisat Auto-Badge")
         self.window.geometry('800x600')
@@ -16,7 +18,7 @@ class UnisatIDInterface:
         self.file = None
         self.dir = None
 
-        bg = PhotoImage(file=f"{os.getcwd()}/static/images/small_interface.png")
+        bg = PhotoImage(file=f"{self.path}/static/images/small_interface.png")
         label1 = Label(self.window, image=bg)
         label1.place(x=0, y=0)
         self.set_buttons()
@@ -35,8 +37,7 @@ class UnisatIDInterface:
         read_me_btn = Button(self.window, text="Инструкции", command=self.open_instructions, height=2, width=10, )
         read_me_btn.place(x=640, y=70)
 
-    @staticmethod
-    def open_instructions():
+    def open_instructions(self):
         window = Toplevel()
         window.title("Инструкция")
         window.geometry('800x300')
@@ -45,7 +46,7 @@ class UnisatIDInterface:
         lbl = Label(window, text="1. Укажите xlsx файл по стандарту указанному в картинке ниже", bg='white')
         lbl.place(x=30, y=0)
 
-        bg = PhotoImage(file=f"{os.getcwd()}/static/images/example.png")
+        bg = PhotoImage(file=f"{self.path}/static/images/example.png")
         lbl2 = Label(window, image=bg, height=183, width=711)
         lbl2.place(x=30, y=30)
 
@@ -58,11 +59,11 @@ class UnisatIDInterface:
         window.mainloop()
 
     def load_file(self):
-        self.file = filedialog.askopenfilename(initialdir=os.getcwd(),
+        self.file = filedialog.askopenfilename(initialdir=self.path,
                                                filetypes=(("Excel files", "*.xlsx"),))
 
     def set_dir(self):
-        self.dir = filedialog.askdirectory(initialdir=os.getcwd())
+        self.dir = filedialog.askdirectory(initialdir=self.path)
         try:
             if self.dir:
                 os.mkdir(f"{self.dir}/cards")
@@ -92,6 +93,7 @@ class UnisatIDInterface:
 
 class ClockInterface:
     def __init__(self, time, data, dir_path):
+        self.path = Path.cwd()
         self.time = time
         self.window = Tk()
         self.window.title("Unisat Auto-Badge")
@@ -104,7 +106,7 @@ class ClockInterface:
         my_thread = threading.Thread(target=self.run_generator, args=(data, dir_path))
         my_thread.start()
 
-        bg = PhotoImage(file=f"{os.getcwd()}/static/images/small_interface.png")
+        bg = PhotoImage(file=f"{self.path}/static/images/small_interface.png")
         label = Label(self.window, image=bg)
         label.place(x=0, y=0)
         self.clock = Label(text="", font=('Helvetica', 48), bg='white')
@@ -134,8 +136,5 @@ class ClockInterface:
 
         if not self.time == datetime.timedelta(seconds=0):
             self.time -= datetime.timedelta(seconds=1)
-
-
-
 
 interface = UnisatIDInterface()

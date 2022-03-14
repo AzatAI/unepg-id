@@ -1,18 +1,21 @@
+import os
+
 import barcode
 import qrcode as qrcode
 import transliterate
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
-import os
+# import os
 from barcode.writer import ImageWriter
+from pathlib import Path
 
 
 class Generator:
     def __init__(self, name, pk, category, country, country_code, result_path):
         self.pk = pk
         self.draw = None
-        self.path = os.getcwd()
+        self.path = Path.cwd()
         self.template_size = 3400
 
         self.result_path = result_path
@@ -109,7 +112,7 @@ class Generator:
         self.draw.text((center_2, (1034 + 40) * 4), text_2, (0, 0, 0), font=self.code_font)
 
     def generate_qr(self):
-        path = os.getcwd()
+        path = Path.cwd()
         file_name = f'{path}/media/qr/{self.transliterate(self.name)}.png'
         qrcode_image = qrcode.make(f"{self.transliterate(self.name)}-KZ2022")
         qrcode_image.save(f'{file_name}', 'PNG')
@@ -134,7 +137,7 @@ class Generator:
                        "Validity period: 21/03/2022 - 01/05/2022", (0, 0, 0), font=self.validity_period_font)
 
     def draw_front(self):
-        path = os.getcwd()
+        path = Path.cwd()
         card_template = Image.open(f"{path}/static/images/front.png")
         self.draw = ImageDraw.Draw(card_template)
 
@@ -150,7 +153,7 @@ class Generator:
         card_template.close()
 
     def draw_back(self):
-        path = os.getcwd()
+        path = Path.cwd()
         card_template = Image.open(f"{path}/static/images/back.png")
         self.draw = ImageDraw.Draw(card_template)
         self.draw_description()
