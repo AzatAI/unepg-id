@@ -18,7 +18,7 @@ class UnisatIDInterface:
         self.file = None
         self.dir = None
 
-        bg = PhotoImage(file=f"{self.path}/static/images/small_interface.png")
+        bg = PhotoImage(file=self.path.joinpath(*"static/images/small_interface.png".split('/')))
         label1 = Label(self.window, image=bg)
         label1.place(x=0, y=0)
         self.set_buttons()
@@ -46,7 +46,7 @@ class UnisatIDInterface:
         lbl = Label(window, text="1. Укажите xlsx файл по стандарту указанному в картинке ниже", bg='white')
         lbl.place(x=30, y=0)
 
-        bg = PhotoImage(file=f"{self.path}/static/images/example.png")
+        bg = PhotoImage(file=self.path.joinpath(*"/static/images/example.png".split("/")))
         lbl2 = Label(window, image=bg, height=183, width=711)
         lbl2.place(x=30, y=30)
 
@@ -107,7 +107,7 @@ class ClockInterface:
         my_thread = threading.Thread(target=self.run_generator, args=(data, dir_path))
         my_thread.start()
 
-        bg = PhotoImage(file=f"{self.path}/static/images/small_interface.png")
+        bg = PhotoImage(file=self.path.joinpath(*"/static/images/small_interface.png".split("/")))
         label = Label(self.window, image=bg)
         label.place(x=0, y=0)
         self.clock = Label(text="", font=('Helvetica', 48), bg='white')

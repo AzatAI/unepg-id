@@ -138,7 +138,7 @@ class Generator:
 
     def draw_front(self):
         path = Path.cwd()
-        card_template = Image.open(f"{path}/static/images/front.png")
+        card_template = Image.open(path.joinpath(*"/static/images/front.png".split("/")))
         self.draw = ImageDraw.Draw(card_template)
 
         self.draw_name()
@@ -154,7 +154,7 @@ class Generator:
 
     def draw_back(self):
         path = Path.cwd()
-        card_template = Image.open(f"{path}/static/images/back.png")
+        card_template = Image.open(path.joinpath(*"/static/images/back.png".split("/")))
         self.draw = ImageDraw.Draw(card_template)
         self.draw_description()
         self.draw_codes()
