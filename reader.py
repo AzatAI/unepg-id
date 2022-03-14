@@ -1,5 +1,4 @@
 import datetime
-import threading
 
 import xlrd
 from generator import Generator
@@ -21,6 +20,10 @@ def clean_value(value: str, column_index: int, row_index: int):
     return value
 
 
+def run_timer(timer, time, data, dir_path):
+    timer(time, data, dir_path)
+
+
 def open_xlsx(file_path, dir_path, timer, window):
     book = xlrd.open_workbook(file_path)
     worksheet = book.sheet_by_index(0)
@@ -37,10 +40,11 @@ def open_xlsx(file_path, dir_path, timer, window):
 
     time = int(len(data) * 3.5) + 10
     time = datetime.timedelta(seconds=time)
-    my_thread = threading.Thread(target=timer, args=(time, ))
-    my_thread.start()
+    run_timer(timer, time, data, dir_path)
+    # my_thread = threading.Thread(target=run_timer, args=(timer, time, data, dir_path ))
+    # my_thread.start()
 
-    for row in data:
-        generator = Generator(name=row[0], pk=row[1], category=row[2], country=row[3], country_code=row[4],
-                              result_path=dir_path)
-        generator.generate_images()
+    # for row in data:
+    #     generator = Generator(name=row[0], pk=row[1], category=row[2], country=row[3], country_code=row[4],
+    #                           result_path=dir_path)
+    #     generator.generate_images()

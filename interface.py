@@ -2,7 +2,9 @@ import datetime
 from tkinter import *
 from tkinter import filedialog, messagebox, Toplevel
 from reader import open_xlsx
+from reader import Generator
 import os
+import threading
 
 
 class UnisatIDInterface:
@@ -89,7 +91,7 @@ class UnisatIDInterface:
 
 
 class ClockInterface:
-    def __init__(self, time):
+    def __init__(self, time, data, dir_path):
         self.time = time
         self.window = Tk()
         self.window.title("Unisat Auto-Badge")
@@ -98,6 +100,9 @@ class ClockInterface:
         self.file = None
         self.dir = None
         self.is_done = False
+
+        my_thread = threading.Thread(target=self.run_generator, args=(data, dir_path))
+        my_thread.start()
 
         bg = PhotoImage(file=f"{os.getcwd()}/static/images/small_interface.png")
         label = Label(self.window, image=bg)
@@ -110,19 +115,27 @@ class ClockInterface:
     def close(self):
         self.window.destroy()
 
+    def run_generator(self, data, dir_path):
+        for row in data:
+            generator = Generator(name=row[0], pk=row[1], category=row[2], country=row[3], country_code=row[4],
+                                  result_path=dir_path)
+            generator.generate_images()
+
+        self.is_done = True
+
+        if self.is_done:
+            file_btn = Button(self.window, text="Close", command=self.close, height=2, width=50, )
+            file_btn.place(x=190, y=430)
+
     def update_clock(self):
         now = str(self.time)
         self.clock.configure(text=now)
         self.window.after(1000, self.update_clock)
 
-        if self.time == datetime.timedelta(seconds=0):
-            self.is_done = True
-        else:
+        if not self.time == datetime.timedelta(seconds=0):
             self.time -= datetime.timedelta(seconds=1)
 
-        if self.is_done:
-            file_btn = Button(self.window, text="Close", command=self.close, height=2, width=50, )
-            file_btn.place(x=190, y=430)
+
 
 
 interface = UnisatIDInterface()
