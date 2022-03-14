@@ -9,11 +9,13 @@ from barcode.writer import ImageWriter
 
 
 class Generator:
-    def __init__(self, name, pk, category, country, country_code):
+    def __init__(self, name, pk, category, country, country_code, result_path):
         self.pk = pk
         self.draw = None
         self.path = os.getcwd()
         self.template_size = 3400
+
+        self.result_path = result_path
 
         self.file_name = f'cards/{self.transliterate(name)}.png'
 
@@ -66,10 +68,10 @@ class Generator:
 
     def draw_description(self):
         self.draw.text((210 * 4, 530 * 4), "KazNU Coordinator", (0, 29, 60), font=self.label_font)
-        self.draw.text((210 * 4, (530 + 50) * 4), "Temirbayev А: 8 (702) 820 0400", (0, 29, 60),
+        self.draw.text((210 * 4, (530 + 50) * 4), "Amirkhan: 8 (702) 820 0400", (0, 29, 60),
                        font=self.label_description_font)
         self.draw.text((210 * 4, (530 + 120) * 4), "UNICEF Kazakhstan", (0, 29, 60), font=self.label_font)
-        self.draw.text((210 * 4, (530 + 170) * 4), "Ibrasheva R: 8 (705) 174 0212", (0, 29, 60),
+        self.draw.text((210 * 4, (530 + 170) * 4), "Raushan: 8 (705) 174 0212", (0, 29, 60),
                        font=self.label_description_font)
 
     def place_bar_code(self, filename):
@@ -142,7 +144,7 @@ class Generator:
         card_template.save(self.file_name)
         self.draw_bar_code()
         card = self.draw_bar_code()
-        card.save(f'cards/{self.pk}.png')
+        card.save(f'{self.result_path}/cards/{self.pk}.png')
         os.remove(f'cards/{self.transliterate(self.name)}.png')
         card.close()
         card_template.close()
@@ -154,9 +156,9 @@ class Generator:
         self.draw_description()
         self.draw_codes()
         self.draw_footer()
-        card_template.save(f"{path}/back/back.png")
+        card_template.save(f"{self.result_path}/back/back.png")
 
     def generate_images(self):
         self.draw_front()
-        # self.draw_back()
+        self.draw_back()
 
