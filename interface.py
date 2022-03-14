@@ -53,7 +53,8 @@ class UnisatIDInterface:
         lbl3 = Label(window, text="2. Укажите папку, где будут находиться сгенерированные изображения", bg='white')
         lbl3.place(x=30, y=230)
 
-        lbl4 = Label(window, text="3. Дождитесь окончания времени генерации.", bg='white')
+        lbl4 = Label(window, text="3. Дождитесь окончания времени генерации(время является примерным, "
+                                  "нужно дождаться кнопки выхода).", bg='white')
         lbl4.place(x=30, y=260)
 
         window.mainloop()
