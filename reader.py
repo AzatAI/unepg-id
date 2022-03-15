@@ -1,5 +1,3 @@
-import datetime
-
 import xlrd
 from generator import Generator
 
@@ -17,11 +15,17 @@ def clean_value(value: str, column_index: int, row_index: int):
             raise ValueError(
                 f"Данные не валидные. В строке {row_index}. Код страны должен состоять из 2 символов")
 
+    new_value = ""
+
+    if column_index == 1:
+        for i in value:
+            if i.isnumeric():
+                new_value += i
     return value
 
 
-def run_timer(timer, time, data, dir_path):
-    timer(time, data, dir_path)
+def run_timer(timer, data, dir_path):
+    timer(data, dir_path)
 
 
 def open_xlsx(file_path, dir_path, timer, window):
@@ -38,13 +42,4 @@ def open_xlsx(file_path, dir_path, timer, window):
 
     window.destroy()
 
-    time = int(len(data) * 3.5) + 10
-    time = datetime.timedelta(seconds=time)
-    run_timer(timer, time, data, dir_path)
-    # my_thread = threading.Thread(target=run_timer, args=(timer, time, data, dir_path ))
-    # my_thread.start()
-
-    # for row in data:
-    #     generator = Generator(name=row[0], pk=row[1], category=row[2], country=row[3], country_code=row[4],
-    #                           result_path=dir_path)
-    #     generator.generate_images()
+    run_timer(timer, data, dir_path)

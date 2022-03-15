@@ -1,12 +1,9 @@
 import os
-
 import barcode
-import qrcode as qrcode
 import transliterate
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
-# import os
 from barcode.writer import ImageWriter
 from pathlib import Path
 
@@ -20,7 +17,7 @@ class Generator:
 
         self.result_path = result_path
 
-        self.file_name = f'cards/{self.transliterate(name)}.png'
+        self.file_name = f'cards/{self.pk}.png'
 
         self.category = category
         self.country = country
@@ -43,11 +40,11 @@ class Generator:
     def has_cyr(s):
         lower = set('абвгдеёжзийклмнопрстуфхцчшщъыьэюя')
         return lower.intersection(s.lower()) != set()
-
-    def transliterate(self, s):
-        if self.has_cyr(s):
-            s = transliterate.translit(s, reversed=True)
-        return s
+    #
+    # def transliterate(self, s):
+    #     if self.has_cyr(s):
+    #         s = transliterate.translit(s, reversed=True)
+    #     return s
 
     def draw_name(self):
         self.draw.text(((self.template_size - self.name_size[0]) / 2, 478 * 4), self.name, (0, 29, 60),
@@ -81,14 +78,14 @@ class Generator:
         bar_code = Image.open(filename)
         width, height = bar_code.size
         bar_code = bar_code.resize((width * 4, height * 4), Image.ANTIALIAS)
-        card_name = f'cards/{self.transliterate(self.name)}.png'
+        card_name = f'cards/{self.pk}.png'
         card = Image.open(card_name)
         bar_code = bar_code.convert("RGBA")
         card = card.convert("RGBA")
 
         card.paste(bar_code, (int((self.template_size - width * 4)/2), 705 * 4))
         bar_code.close()
-        os.remove(filename)
+        # os.remove(filename)
         return card
 
     def draw_bar_code(self):
@@ -111,26 +108,6 @@ class Generator:
         self.draw.text((center_1, 1034 * 4), text_1, (0, 0, 0), font=self.code_font)
         self.draw.text((center_2, (1034 + 40) * 4), text_2, (0, 0, 0), font=self.code_font)
 
-    def generate_qr(self):
-        path = Path.cwd()
-        file_name = f'{path}/media/qr/{self.transliterate(self.name)}.png'
-        qrcode_image = qrcode.make(f"{self.transliterate(self.name)}-KZ2022")
-        qrcode_image.save(f'{file_name}', 'PNG')
-        return file_name
-
-    def place_qr(self):
-        file_name = self.generate_qr()
-        qr_code = Image.open(file_name)
-        qr_code = qr_code.resize((160*4, 160*4), Image.ANTIALIAS)
-        card_name = f'cards/{self.transliterate(self.name)}.png'
-        card = Image.open(card_name)
-        qr_code = qr_code.convert("RGBA")
-        card = card.convert("RGBA")
-        card.paste(qr_code, (371 * 4, 539 * 4))
-        qr_code.close()
-        os.remove(file_name)
-        return card
-
     def draw_validity(self):
         self.draw.text(((self.template_size -
                          self.validity_period_font.getsize("Validity period: 21/03/2022 - 01/05/2022")[0])/2, 839 * 4),
@@ -148,7 +125,7 @@ class Generator:
         self.draw_bar_code()
         card = self.draw_bar_code()
         card.save(f'{self.result_path}/cards/{self.pk}.png')
-        os.remove(f'cards/{self.transliterate(self.name)}.png')
+        # os.remove(f'cards/{self.transliterate(self.name)}.png')
         card.close()
         card_template.close()
 
@@ -164,4 +141,3 @@ class Generator:
     def generate_images(self):
         self.draw_front()
         self.draw_back()
-
