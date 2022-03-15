@@ -1,12 +1,10 @@
 import os
-
 import barcode
 import qrcode as qrcode
 import transliterate
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
-# import os
 from barcode.writer import ImageWriter
 from pathlib import Path
 

@@ -1,4 +1,3 @@
-import datetime
 import os
 from tkinter import *
 from tkinter import filedialog, messagebox, Toplevel
@@ -69,7 +68,7 @@ class UnisatIDInterface:
             if self.dir:
                 os.mkdir(f"{self.dir}/cards")
                 os.mkdir(f"{self.dir}/back")
-        except FileExistsError as e:
+        except FileExistsError:
             messagebox.showerror('Ошибка', "В данной папке уже существуют директории cards и back. "
                                            "Выберите пустую директорию")
 
@@ -93,9 +92,8 @@ class UnisatIDInterface:
 
 
 class ClockInterface:
-    def __init__(self, time, data, dir_path):
+    def __init__(self, data, dir_path):
         self.path = Path.cwd()
-        self.time = time
         self.window = Tk()
         self.window.title("Unisat Auto-Badge")
         self.window.geometry('800x600')
@@ -103,6 +101,7 @@ class ClockInterface:
         self.file = None
         self.dir = None
         self.is_done = False
+        self.object_count = None
 
         my_thread = threading.Thread(target=self.run_generator, args=(data, dir_path))
         my_thread.start()
@@ -110,19 +109,22 @@ class ClockInterface:
         bg = PhotoImage(file=self.path.joinpath(*"/static/images/small_interface.png".split("/")))
         label = Label(self.window, image=bg)
         label.place(x=0, y=0)
-        self.clock = Label(text="", font=('Helvetica', 48), bg='white')
-        self.clock.place(x=290, y=300)
-        self.update_clock()
+        self.objects_remain = Label(text="", font=('Helvetica', 38), bg='white')
+        self.objects_remain.place(x=160, y=300)
+        self.update_count()
         self.window.mainloop()
 
     def close(self):
         self.window.destroy()
 
     def run_generator(self, data, dir_path):
+        self.object_count = len(data)
         for row in data:
             generator = Generator(name=row[0], pk=row[1], category=row[2], country=row[3], country_code=row[4],
                                   result_path=dir_path)
             generator.generate_images()
+
+            self.object_count -= 1
 
         self.is_done = True
 
@@ -130,12 +132,9 @@ class ClockInterface:
             file_btn = Button(self.window, text="Close", command=self.close, height=2, width=50, )
             file_btn.place(x=190, y=430)
 
-    def update_clock(self):
-        now = str(self.time)
-        self.clock.configure(text=now)
-        self.window.after(1000, self.update_clock)
-
-        if not self.time == datetime.timedelta(seconds=0):
-            self.time -= datetime.timedelta(seconds=1)
+    def update_count(self):
+        count = str(self.object_count)
+        self.objects_remain.configure(text=f"Осталось {count} объектов")
+        self.window.after(1000, self.update_count)
 
 interface = UnisatIDInterface()
