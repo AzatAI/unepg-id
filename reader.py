@@ -15,6 +15,12 @@ def clean_value(value: str, column_index: int, row_index: int):
             raise ValueError(
                 f"Данные не валидные. В строке {row_index}. Код страны должен состоять из 2 символов")
 
+    new_value = ""
+
+    if column_index == 1:
+        for i in value:
+            if i.isnumeric():
+                new_value += i
     return value
 
 

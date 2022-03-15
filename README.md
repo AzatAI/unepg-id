@@ -12,12 +12,21 @@
 
 ``` python
 datas=[
-                 ('media\\bar\\*', '.\\media\\bar\\'),
+                 ('media\\bar\\*.txt', '.\\media\\bar\\'),
                  ('static\\fonts\\*.ttf', '.\\static\\fonts\\'),
                  ('static\\images\\*.png', '.\\static\\images\\'),
                  ('cards\\*', '.\\cards\\')
                  ],
 ```
 
-pyinstaller ./XXXX.spec
+`pyinstaller ./XXXX.spec`
 
+``` python
+
+datas=[
+     ('media/bar/*.txt', './media/bar/'),
+     ('static/fonts/*.ttf', './static/fonts/'),
+     ('static/images/*.png', './static/images/'),
+     ('cards/*', './cards/')
+     ],
+```
