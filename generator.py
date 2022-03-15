@@ -17,7 +17,7 @@ class Generator:
 
         self.result_path = result_path
 
-        self.file_name = f'cards/{self.pk}.png'
+        self.file_name = f'{self.result_path}/temp_cards/{self.pk}.png'
 
         self.category = category
         self.country = country
@@ -78,7 +78,7 @@ class Generator:
         bar_code = Image.open(filename)
         width, height = bar_code.size
         bar_code = bar_code.resize((width * 4, height * 4), Image.ANTIALIAS)
-        card_name = f'cards/{self.pk}.png'
+        card_name = f'{self.result_path}/temp_cards/{self.pk}.png'
         card = Image.open(card_name)
         bar_code = bar_code.convert("RGBA")
         card = card.convert("RGBA")
@@ -91,7 +91,7 @@ class Generator:
     def draw_bar_code(self):
         options = {"module_height": 6.5, "text_distance": 0.5}
         code128 = barcode.get('code128', f'{self.country_code}-{self.pk}-{self.category.upper()}', writer=ImageWriter())
-        filename = code128.save(f"{self.path}/media/bar/1", options=options)
+        filename = code128.save(f"{self.result_path}/bar/{self.pk}", options=options)
         return self.place_bar_code(filename)
 
     def draw_codes(self):
