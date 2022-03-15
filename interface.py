@@ -68,6 +68,8 @@ class UnisatIDInterface:
             if self.dir:
                 os.mkdir(f"{self.dir}/cards")
                 os.mkdir(f"{self.dir}/back")
+                os.mkdir(f"{self.dir}/temp_cards")
+                os.mkdir(f"{self.dir}/bar")
         except FileExistsError:
             messagebox.showerror('Ошибка', "В данной папке уже существуют директории cards и back. "
                                            "Выберите пустую директорию")
